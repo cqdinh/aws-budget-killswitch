@@ -13,8 +13,8 @@ This CDK code provides a construct that uses a Lambda to automatically delete Cl
 ## Construct Props
 | Name | Type | Description |
 | ---- | ---- | ----------- |
-| maxDollarsPerMonth | number | If the AWS account's total bill for the month reaches this threshold, the cutoff will be triggered. | 
-| stacksToDelete | Array<string> | The names of the CloudFormation stacks that should be deleted when the cutoff is reached |
+| maxDollarsPerMonth | `number` | If the AWS account's total bill for the month reaches this threshold, the cutoff will be triggered. | 
+| stacksToDelete | `Array<string>` | The names of the CloudFormation stacks that should be deleted when the cutoff is reached |
 
 ## Example Usage
 The code below will create a lambda to delete the stack named `test-stack` when $10.00 has been spent.
