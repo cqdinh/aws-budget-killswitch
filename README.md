@@ -1,14 +1,27 @@
-# Welcome to your CDK TypeScript project!
+# Budget Emergency Cutoff
 
-This is a blank project for TypeScript development with CDK.
+This CDK code provides a construct that uses a Lambda to automatically delete CloudFormation stacks when the account's spending gets too high. This is intended as a way to avoid accidentally incurring huge bills for personal projects, experimental / test setups, and other situations where a complete shutdown is preferable to exceeding a budget.
 
-The `cdk.json` file tells the CDK Toolkit how to execute your app.
+## Initializer
+`BudgetEmergencyCutoff(scope: Construct, id: string, props: BudgetEmergencyCutoffProps)`
 
-## Useful commands
+#### Parameters
+- scope `Construct`
+- id `string`
+- props `BudgetEmergencyCutoffProps`
 
- * `npm run build`   compile typescript to js
- * `npm run watch`   watch for changes and compile
- * `npm run test`    perform the jest unit tests
- * `cdk deploy`      deploy this stack to your default AWS account/region
- * `cdk diff`        compare deployed stack with current state
- * `cdk synth`       emits the synthesized CloudFormation template
+## Construct Props
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| maxDollarsPerMonth | number | If the AWS account's total bill for the month reaches this threshold, the cutoff will be triggered. | 
+| stacksToDelete | Array<string> | The names of the CloudFormation stacks that should be deleted when the cutoff is reached |
+
+## Example Usage
+The code below will create a lambda to delete the stack named `test-stack` when $10.00 has been spent.
+
+```
+const cutoff = new BudgetEmergencyCutoff(this, "budget-cutoff", {
+    maxDollarsPerMonth: 10.00,
+    stacksToDelete: ["test-stack"]
+})
+```
