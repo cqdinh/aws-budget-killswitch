@@ -1,6 +1,6 @@
 import { expect as expectCDK, matchTemplate, MatchStyle } from '@aws-cdk/assert';
 import * as cdk from '@aws-cdk/core';
-import * as AwsBudgetEmergencyCutoff from '../lib/aws budget emergency cutoff-stack';
+import * as AwsBudgetEmergencyCutoff from '../lib/cutoff-stack';
 
 test('Empty Stack', () => {
     const app = new cdk.App();
