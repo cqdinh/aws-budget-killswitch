@@ -14,7 +14,7 @@ This CDK code provides a construct that uses a Lambda to automatically delete Cl
 | Name | Type | Description |
 | ---- | ---- | ----------- |
 | maxDollarsPerMonth | `number` | If the AWS account's total bill for the month reaches this threshold, the cutoff will be triggered. | 
-| stacksToDelete | `Array<StackToKill | string>` | The CloudFormation stacks that should be deleted when the cutoff is reached. Strings denote stacks that should be deleted from the configured default region. StackToKill can be used to specify stacks in a particular region |
+| stacksToDelete | `Array<StackToKill or string>` | The CloudFormation stacks that should be deleted when the cutoff is reached. Strings denote stacks that should be deleted from the configured default region. StackToKill can be used to specify stacks in a particular region |
 
 ### StackToKill
 | Name | Type | Description |
