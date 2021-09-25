@@ -24,15 +24,19 @@ function getStackToKill(stack: StackToKill | string): StackToKill {
 }
 
 export class BudgetKillswitch extends Construct {
+
+    topic: Topic;
+    budget: CfnBudget;
+
     constructor(scope: Construct, id: string, props: BudgetKillswitchProps) {
         super(scope, id);
 
-        const topic = new Topic(this, "BudgetKillswitchTopic", {
+        this.topic = new Topic(this, "BudgetKillswitchTopic", {
             displayName: "Budget Killswitch Triggered",
-            topicName: "emergency-cutoff-topic"
+            topicName: "budget-killswitch-topic"
         });
 
-        const budget = new CfnBudget(this, "killswitch-trigger", {
+        this.budget = new CfnBudget(this, "killswitch-trigger", {
             budget: {
                 budgetType: "COST",
                 timeUnit: "MONTHLY",
@@ -50,7 +54,7 @@ export class BudgetKillswitch extends Construct {
                 subscribers: [
                     {
                         subscriptionType: "SNS",
-                        address: topic.topicArn
+                        address: this.topic.topicArn
                     }
                 ]
             }]
@@ -58,7 +62,7 @@ export class BudgetKillswitch extends Construct {
 
         const lambda = new StackDeleteLambda(this, "stackDeleteLambda", {
             stacksToDelete: props.stacksToDelete.map(getStackToKill),
-            triggerTopics: [topic]
+            triggerTopics: [this.topic]
         });
     }
 }

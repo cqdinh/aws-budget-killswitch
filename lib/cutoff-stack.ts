@@ -6,7 +6,7 @@ export class AwsBudgetEmergencyCutoffStack extends cdk.Stack {
     super(scope, id, props);
 
     const cutoff = new BudgetKillswitch(this, "budget-cutoff", {
-        maxDollarsPerMonth: 0.01,
+        maxDollarsPerMonth: 10.00,
         stacksToDelete: ["test-stack-a", {
             stackName: "test-stack-b",
             region: "us-west-1"
