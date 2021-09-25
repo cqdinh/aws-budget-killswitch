@@ -1,13 +1,16 @@
 import * as cdk from '@aws-cdk/core';
-import { BudgetEmergencyCutoff } from './BudgetEmergencyCutoff';
+import { BudgetKillswitch } from './BudgetKillswitch';
 
 export class AwsBudgetEmergencyCutoffStack extends cdk.Stack {
   constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
 
-    const cutoff = new BudgetEmergencyCutoff(this, "budget-cutoff", {
+    const cutoff = new BudgetKillswitch(this, "budget-cutoff", {
         maxDollarsPerMonth: 0.01,
-        stacksToDelete: ["test-stack"]
+        stacksToDelete: ["test-stack-a", {
+            stackName: "test-stack-b",
+            region: "us-west-1"
+        }]
     })
   }
 }

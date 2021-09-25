@@ -3,21 +3,36 @@ import { Topic } from "@aws-cdk/aws-sns";
 import { Construct } from "@aws-cdk/core";
 import { StackDeleteLambda } from "./StackDeleteLambda";
 
-export interface BudgetEmergencyCutoffProps {
-    maxDollarsPerMonth: number,
-    stacksToDelete: Array<string>
+export interface StackToKill {
+    stackName: string,
+    region?: string
 }
 
-export class BudgetEmergencyCutoff extends Construct {
-    constructor(scope: Construct, id: string, props: BudgetEmergencyCutoffProps) {
+export interface BudgetKillswitchProps {
+    maxDollarsPerMonth: number,
+    stacksToDelete: Array<StackToKill | string>
+}
+
+function getStackToKill(stack: StackToKill | string): StackToKill {
+    if (typeof stack === "string" || stack instanceof String) {
+        return {
+            stackName: stack as string
+        };
+    }
+
+    return stack as StackToKill;
+}
+
+export class BudgetKillswitch extends Construct {
+    constructor(scope: Construct, id: string, props: BudgetKillswitchProps) {
         super(scope, id);
 
-        const topic = new Topic(this, "emergencyCutoffTopic", {
-            displayName: "Budget Emergency Cutoff Triggered",
+        const topic = new Topic(this, "BudgetKillswitchTopic", {
+            displayName: "Budget Killswitch Triggered",
             topicName: "emergency-cutoff-topic"
         });
 
-        const budget = new CfnBudget(this, "max-spending", {
+        const budget = new CfnBudget(this, "killswitch-trigger", {
             budget: {
                 budgetType: "COST",
                 timeUnit: "MONTHLY",
@@ -42,7 +57,7 @@ export class BudgetEmergencyCutoff extends Construct {
         });
 
         const lambda = new StackDeleteLambda(this, "stackDeleteLambda", {
-            stacksToDelete: props.stacksToDelete,
+            stacksToDelete: props.stacksToDelete.map(getStackToKill),
             triggerTopics: [topic]
         });
     }
