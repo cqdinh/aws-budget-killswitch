@@ -17,11 +17,13 @@ This CDK code provides a construct that uses a Lambda to automatically delete Cl
 | stacksToDelete | `Array<string>` | The names of the CloudFormation stacks that should be deleted when the cutoff is reached |
 
 ## Example Usage
-The code below will create a lambda to delete the stack named `test-stack` when $10.00 has been spent.
+The code below will create a lambda to delete the stack named `test-stack-a` from the default region and a stack named `test-stack-b` from the `us-west-1` region when $10.00 has been spent.
 
 ```
-const cutoff = new BudgetEmergencyCutoff(this, "budget-cutoff", {
-    maxDollarsPerMonth: 10.00,
-    stacksToDelete: ["test-stack"]
-})
+const cutoff = new BudgetKillswitch(this, "budget-cutoff", {
+        maxDollarsPerMonth: 10.00,
+        stacksToDelete: ["test-stack-a", {
+            stackName: "test-stack-b",
+            region: "us-west-1"
+        }]
 ```
