@@ -27,6 +27,7 @@ export class BudgetKillswitch extends Construct {
 
     topic: Topic;
     budget: CfnBudget;
+    stackDeleteLambda: StackDeleteLambda;
 
     constructor(scope: Construct, id: string, props: BudgetKillswitchProps) {
         super(scope, id);
@@ -60,7 +61,7 @@ export class BudgetKillswitch extends Construct {
             }]
         });
 
-        const lambda = new StackDeleteLambda(this, "stackDeleteLambda", {
+        this.stackDeleteLambda = new StackDeleteLambda(this, "stackDeleteLambda", {
             stacksToDelete: props.stacksToDelete.map(getStackToKill),
             triggerTopics: [this.topic]
         });
